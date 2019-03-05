@@ -1,0 +1,109 @@
+<!-- 결제 완료시 페이지(결제에서 redirect url로 넘어오는 화면) -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  </head>
+
+  <style>
+    h1, h5, h6{
+      text-align:center;
+    }
+    .tab {
+       margin-left: 100px;
+     }
+  </style>
+
+  <body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+      <div>
+        <br>
+        <h1>주문이 정상적으로<br><span style="color:green">완료</span>되었습니다.</h1>
+        <hr>
+          <h5>
+            주문번호 :
+            <script>
+              var merchant_uid = "<%= merchant_uid%>";
+              document.write(merchant_uid.substring(31,37));
+
+              function relocate_home(){
+                   location.href = "https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/payment_list";//#############################
+              }
+            </script>
+            
+            <button type="button" class="btn btn-sm" onclick=" relocate_home()">구매내역보기</button>
+            <br><br><br>
+
+            <input type="button" value="주문접수중" id="a" class="btn" onclick="change(this)" style="background-color:whitegray;">
+            <input type="button" value="제조중" id="b" class="btn" onclick="change(this)" style="background-color:whitegray;">
+            <input type="button" value="제조완료" id="c" class="btn" onclick="change(this)" style="background-color:whitegray;">
+            <input type="button" value="수령완료" id="d" class="btn" onclick="change(this)" style="background-color:whitegray;"><br>
+
+            <script language="JavaScript">
+              var state="<%= state%>";  //상태값 끌어와서 상태별 버튼색상 바꿔줌
+              //var state="4";
+
+              if(state=="1"){
+                document.getElementById("a").click(); //클릭
+              }else if(state=="2"){
+                document.getElementById("b").click();
+              }else if(state=="3"){
+                document.getElementById("c").click();
+              }else{
+                document.getElementById("d").click();
+              }
+
+              function change(obj){
+                obj.style.background = 'green';  //클릭시 녹색배경+흰색글씨
+                obj.style.color = 'white';
+              }
+            </script>
+
+            <h6><%= brand_name%> <%= market_name%><br>
+              예상소요시간 : <%= required_time%>분</h6><hr>
+
+          <div class="container">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>메뉴</th>
+                  <th>수량</th>
+                  <th>가격</th>
+                </tr>
+              </thead>
+
+              <script type="text/javascript" >
+                var current_obj_length = "<%= current_obj_length%>";                 // 주문수 가져오기
+
+                var menu_array = "<%= menu%>";
+                var menu_split = menu_array.split(',');
+
+                var amount_array = "<%= amount%>";
+                var amount_split = amount_array.split(',');
+
+                var price_array = "<%= price%>";
+                var price_split = price_array.split(',');
+
+                for(i=0; i<current_obj_length; i++){                 // 주문수 만큼
+                  document.write("<tr>");                            // 행 만들고,
+                  document.write("<td>"+menu_split[i]+"</td>");
+                  document.write("<td>"+amount_split[i]+"</td>");
+                  document.write("<td>"+price_split[i]+"</td>");     // 메뉴, 수량, 가격 표시
+                  document.write("</tr>");
+                }
+                document.write("<tr>");
+                document.write("<td>"+"</td>"+"<td>"+"</td>"+"<td>"+"<%= totPrice%>"+"</td>");  // 맨 마지막 행에 총금액 표시
+                document.write("</tr>");
+
+              </script>
+            </table>
+          </div>
+        </h5>
+        <h5><a href="app://application"><button type="button" class="btn" onclick="app://application" style="background-color:green;color:white;">홈화면으로 돌아가기</button></a><br><br><br></h5>
+        <!--클릭시 홈 액티비티로 연결-->
+  </body>
+</html>

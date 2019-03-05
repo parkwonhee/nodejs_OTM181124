@@ -1,0 +1,243 @@
+<!-- gps+uuid-->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.title{
+	width : 100%;
+	height : 160px;
+	line-height : 160px;
+	color : #FFF;
+	font-size : 4.0em;
+	font-weight : bold;
+	background-color : DarkBlue;
+	padding-left : 50px;
+	margin : 0px;
+	display:none;
+
+}
+#map {
+	width : 100%;
+	height : 700px;
+	margin : 0px;
+}
+#list{
+	width : 100%;
+	height : 500px;
+	font-size : 3.2em;
+	background-color : #FE2E2E;
+	padding-left : 50px;
+	color : #FFF;
+	margin : 0px;
+	display:none;
+}
+</style>
+</head>
+<body>
+
+<div class = "title">  O T M</div>
+<div id="map"></div>
+<div id="list">
+	<div class="title_sub"> </div>
+	<div id="best"></div>
+</div>
+
+</body>
+<script src="//code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBptGAxKmfROPUJAM77Um1nVvF8Jbx4oqM&libraries=places&callback=getLocation" async defer></script>
+<script type="text/javascript">
+/*
+ *  위 소스의 callback 주의
+ */
+	//var slx ='empty';
+	//var sly ='empty';
+	//var sn='empty';
+
+	var store={
+			name:[],
+			x:[],
+			y:[]
+	};
+
+	//var userlocation_x=getQuerystring('user_x');
+	//var userlocation_y=getQuerystring('user_y');
+
+	function getQuerystring(paramName){
+			var _tempUrl = decodeURI(window.location.search);
+				_tempUrl = _tempUrl.substring(1); //url에서 처음부터 '?'까지 삭제
+				var _tempArray = _tempUrl.split('&'); // '&'을 기준으로 분리하기
+				for(var i = 0; _tempArray.length; i++) {
+					 var _keyValuePair = _tempArray[i].split('='); // '=' 을 기준으로 분리하기
+					 if(_keyValuePair[0] == paramName){ // _keyValuePair[0] : 파라미터 명
+							// _keyValuePair[1] : 파라미터 값
+							return _keyValuePair[1];
+					 }
+				}
+		 }
+
+	//------------------------------------------------------------------------------------------------------------
+	var map;
+	var service;
+	var infowindow;
+
+	//------------------------------------------------------------------------------
+	function getLocation() {
+
+		if (navigator.geolocation) { // GPS�� �����ϸ�
+			navigator.geolocation.getCurrentPosition(function(position) {
+				var user_x = position.coords.latitude;
+				var user_y = position.coords.longitude;
+				//localStorage.setItem("user_x",position.coords.latitude);
+				//localStorage.setItem("user_y",position.coords.longitude);
+
+				//window.location.href = 'https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/users';
+				//window.location.href = 'index2.html?user_x='+user_x+'&user_y'+user_y;
+				//window.location.href = 'https://s3.amazonaws.com/lexwebuimobilehub-hosting-mobilehub-1032348699/index2.html'+'?user_x='+user_x+'&user_y='+user_y;
+				//window.location.href = 'https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/users'+'?user_x='+user_x+'&user_y='+user_y;
+
+
+				//window.location.href = 'index2.html'+'?user_x='+user_x+'&user_y='+user_y;
+				initialize(user_x,user_y);
+		 	}, function(error) {
+		    	alert("���� ��ġ �����߻�");
+		    }, {
+		    	enableHighAccuracy: false,
+		    	maximumAge: 0,
+		   		timeout: Infinity
+		    });
+		} else {
+			alert('GPS�� �������� �ʽ��ϴ�');
+		}
+	}
+	//-------------------------------------------------------------------------------------------
+
+
+	function initialize(x,y) {
+
+
+		var pyrmont = new google.maps.LatLng(x,y);
+
+	    map = new google.maps.Map(document.getElementById('map'), {
+	  		center: pyrmont,
+	   		zoom: 15
+	    });
+	    infowindow = new google.maps.InfoWindow();
+	    var request = {
+	    	location: pyrmont,
+	    	radius: '200',
+	    	//query:  sessionStorage.getItem("kind")
+	    	query:  "투썸플레이스"
+	    };
+
+	    //아이콘 크기 때문에 추가했었음
+	    var icon = {
+	    	    url: "https://s3.amazonaws.com/twosome-db-url/Map-Marker-PNG-Pic.png", // url
+	    	    scaledSize: new google.maps.Size(80, 100), // scaled size
+	    	    origin: new google.maps.Point(0,0), // origin
+	    	    anchor: new google.maps.Point(0, 0) // anchor
+	    };
+
+	    var marker = new google.maps.Marker({
+        	map: map,
+        	position: pyrmont,
+        	icon : icon
+        });
+
+        infowindow.setContent("<div><h1>현재위치</h1></div>");
+        infowindow.open(map, marker);
+
+	   	service = new google.maps.places.PlacesService(map);
+	  	service.textSearch(request, callback);
+	}
+
+	function callback(results, status) {
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+	    for (var i = 0; i < results.length; i++) {
+	    	var place = results[i];
+	        createMarker(results[i]);
+
+	    }
+	  	}
+	}
+	function createMarker(place) {
+		var placeLoc = place.geometry.location;
+		var icon = {//마커 크기조작할려고 넣었음....
+	    	    url: "https://s3.amazonaws.com/twosome-db-url/google-309739_1280.png", // url
+	    	    scaledSize: new google.maps.Size(80, 100), // scaled size
+	    	    origin: new google.maps.Point(0,0), // origin
+	    	    anchor: new google.maps.Point(0, 0) // anchor
+	    };
+        var marker = new google.maps.Marker({
+        	map: map,
+        	position: place.geometry.location,
+        	icon : icon
+        });
+		var loc = String(place.geometry.location);
+        loc =loc.substr(1,loc.length-2);//양앞 괄호 없애기 및 x,y값 얻을라고....
+        loc=loc.split(',');
+        loc[0]=loc[0].trim();
+        loc[1]=loc[1].trim();
+        /*
+        if(sn =='empty'){//여기를 그냥 하나의 객체 이용해서 하는걸로 수정하자
+        	slx='slx='+loc[0];
+        	sly='sly='+loc[1];
+        	sn='sn='+place.name;
+        }
+        else{
+
+        	slx+='&slx='+loc[0];
+        	sly+='&sly='+loc[1];
+        	sn+='&sn='+place.name;
+        }
+        */
+        store.name.push(place.name);
+        store.x.push(loc[0]);
+        store.y.push(loc[1]);
+
+        google.maps.event.addListener(marker, 'click', function() {
+  	     	//infowindow.setContent(place.name);
+  	     	infowindow.setContent('<div style="width:400px; height:130px; font-size: 2.2em">'+place.name+'</div>');
+
+  	      	infowindow.open(map, this);
+  	      	if(confirm(place.name+" 매장이 맞습니까?"))
+  	      	{
+  	      		//window.location.href='index.jsp?slx='+loc[0]+'&sly='+loc[1]+'&sn='+place.name+'&user_x='+userlocation_x+'&user_y='+userlocation_y;
+  	      		//window.location.href='purpose.html?slx='+loc[0]+'&sly='+loc[1]+'&sn='+place.name+'&user_x='+userlocation_x+'&user_y='+userlocation_y;
+
+							var uuid = "<%= uuid%>"; //넘겨줄거면 이렇게 넘겨줘야하는것같슴다. 이 초이스인가뭐시긴가가 세션값인가요 밑 스크립트에서 테스트해봄
+							var token = "<%= token%>";
+							var brandName = "투썸플레이스";
+							var positionName =place.name.substr("투썸플레이스".length+1).trim();
+							var placeId = place.place_id;
+
+							var url_parameter = `?uuid=${uuid}&brandName=${brandName}&positionName=${positionName}&placeId=${placeId}&token=${token}`;
+							// var user_choice = {
+  	      		// 	brandName : "투썸플레이스",
+  	      		// 	positionName : place.name.substr("투썸플레이스".length+1).trim(),  //브랜드명.length()를 이용해서 유연하게 쓰자
+							// 	uuid : uuid,  //이거 이렇게써두되나요????????????????????????????????????????????????????????????????????????????????????????????????????????\
+							// 	placeId : place.place_id
+  	      		// };
+
+
+  	      		window.location.href='https://d3lemway224wiz.cloudfront.net/'+url_parameter;//필요하다는 정보들 추가해주기
+  	      	}
+        });
+	}
+
+
+
+	//------------------------------------------------------------------------------------------------------------
+</script>
+
+<!--
+<script type="text/javascript">
+var uuid = "<%= uuid%>";
+sessionStorage.setItem("uuid",uuid);
+document.write(sessionStorage.getItem("uuid"));
+</script>
+-->
+</html>

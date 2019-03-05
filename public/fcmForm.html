@@ -1,0 +1,151 @@
+<!-- fcm 푸시 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="views/reset.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- Compiled and minified CSS materializecss.com-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+    <!-- D3.js를 로딩 -->	  <!-- billboard.js와 기본 스타일을 로딩 -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="views/billboard.js"></script>
+    <link rel="stylesheet" href="views/billboard.css">
+    <link rel="stylesheet" type="text/css" href="views/full.css">
+    <style type="text/css">
+      h5, h2, h4{  text-align:center;}
+      h4{margin-top:5%;margin-bottom: 3%;}
+      .centered { display: table; margin-left: auto; margin-right: auto; }
+      @media all and (max-width: 467px) {
+         .fcmForm { text-align: left; margin: 0 auto;border: 2px solid gray; width: 90%; height:50%}
+
+      }
+      @media all and (min-width: 468px) and (max-width: 1099px) {
+        .fcmForm { text-align: left; margin: 0 auto;border: 2px solid gray; width: 450px; height:45% }
+
+      }
+      @media all and (min-width: 1100px) {
+        .fcmForm { text-align: left; margin: 0 auto;border: 2px solid gray; width: 450px; height:45% }
+
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+    <div id="wel">
+      안녕하세요.<script type="text/javascript">
+        var positionName = "<%= positionName%>";
+        document.write(" "+positionName+" 관리자님 ");
+      </script> <a href="https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/logout">로그아웃</a>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center">
+          <script type="text/javascript">
+            var positionName = "<%= positionName%>";
+            document.write(positionName+" 관리자 페이지");
+          </script>
+        </a>
+        <ul class="nav-mobile" class="left">
+          <li><a id="home_button" class="material-icons">home</a></li>
+          <li><a id="state_button">주문접수</a></li>
+          <li><a id="list_button">통계</a></li>
+          <li><a id="ad_button">광고</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+<!-- -->
+    <br>
+    <div class="fcmForm">
+      <h4>Push Message</h4>
+      <hr>
+      <form action="/fcm_send" method="post">
+        타이틀 : <br><input name="title" rows="4" cols="70" placeholder="FCM_(버거킹 ㅇㅇ지점)"  required></input><br><br>
+        이미지(URL) : <br><input type="text" name="imgurllink" id="imgurllink" placeholder="https://" size="50" onBlur="imgPreview()" required><br>
+
+        <!--
+        <input type='file' id="imgInput">
+        <input type="button" onclick="S3button_click()" value="url로 변환" id="s3button" class="button"><br>
+        -->
+        <br>
+        <img id="image" src="https://s3-ap-northeast-1.amazonaws.com/imageurl/ad.png" width="50%" style="margin-left: auto; margin-right: auto; display: block;"/>
+        <hr>
+        <h2>
+        <input type="reset" value="Reset" id="reset" class="btn" style="background-color:green;color:white;">
+        <input type="button" value="Send" id="fcmSend" class="btn" style="background-color:green;color:white;">
+      </h2>
+      </form>
+    </div><br>
+    <script>
+      document.querySelector('#fcmSend').addEventListener('click', function(){
+        var title_inputdata = document.forms[0].elements[0].value; //폼의 첫번째 엘리먼트(input)의 value값을 가져옴 == title
+        var url_inputdata = document.forms[0].elements[1].value;   //폼의 두번째 엘리먼트(input)의 value값을 가져옴 == url
+
+        Send('https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/fcm_send', title_inputdata, url_inputdata);  //#########################################url바뀌면 잘 바꿔줘야함
+        alert('전송되었습니다.');
+      })
+
+      function Send(url, data, data2){
+          var data = {'title':data, 'url':data2};
+          data = JSON.stringify(data);  //string형태로 바꿔줌
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST',url);
+          xhr.setRequestHeader('Content-Type',"application/json");
+          xhr.send(data);
+
+          xhr.addEventListener('load',function(){
+            var result = JSON.parse(xhr.responseText);
+            document.querySelector(".result").innerHTML= result.title;
+            document.querySelector(".result2").innerHTML= result.url;
+          });
+        }
+    </script>
+
+<!-- -->
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#home_button').on('click',function(){      //홈
+          location.href = "homepage";
+        });
+
+        $('#state_button').on('click',function(){      //state_button
+          var ID =  "<%= ID%>";
+          var placeid =  "<%= placeid%>";
+          window.location.href = 'http://52.3.187.7:3000/showOrder?ID='+ID+'&placeid='+placeid;
+        });
+
+        $('#list_button').on('click',function(){      //리스트
+          location.href = "listlist";
+        });
+
+        $('#ad_button').on('click',function(){      //광고오보겠씁돠아
+          location.href = "fcm";
+        });
+
+        $('#logout_button').on('click',function(){      //logout_button
+          location.href = "logout";
+        });
+      });
+    </script>
+    <footer>
+      <address id="address1">
+        <br>
+        <img id="box" src="https://s3.amazonaws.com/twosome-db-url/otm_small.png" style="weight:30px; height:30px;" >Copyright © OTM Corp. All Rights Reserved.
+      </address>
+    </footer>
+  </div>
+  </body>
+</html>

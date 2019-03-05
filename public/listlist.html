@@ -1,0 +1,218 @@
+<!-- list보기 -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="views/reset.css">
+	  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- Compiled and minified CSS materializecss.com-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+    <!-- D3.js를 로딩 -->	  <!-- billboard.js와 기본 스타일을 로딩 -->
+	  <script src="https://d3js.org/d3.v4.min.js"></script>
+	  <script src="views/billboard.js"></script>
+	  <link rel="stylesheet" href="views/billboard.css">
+    <link rel="stylesheet" type="text/css" href="views/full.css">
+    <style type="text/css">
+      @media all and (max-width: 596px) {
+        .container{margin-top:1%;}
+        #main_wrap{padding-top:5%;}
+      }
+      @media all and (min-width: 597px) {
+        .container{margin-top:10%;}
+        #main_wrap{padding-top:70%;}
+      }
+      #empty{margin-top: 30px;}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+    <div id="wel">
+      안녕하세요.<script type="text/javascript">
+        var positionName = "<%= positionName%>";
+        document.write(" "+positionName+" 관리자님 ");
+      </script> <a href="https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/logout">로그아웃</a>
+    </div>
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center">
+          <script type="text/javascript">
+            var positionName = "<%= positionName%>";
+            document.write(positionName+" 관리자 페이지");
+          </script>
+        </a>
+        <ul class="nav-mobile" class="left">
+          <li><a id="home_button" class="material-icons">home</a></li>
+          <li><a id="state_button">주문접수</a></li>
+          <li><a id="list_button">통계</a></li>
+          <li><a id="ad_button">광고</a></li>
+        </ul>
+      </div>
+    </nav>
+
+
+    <div class="row" >
+      <div class="col s12 m2 l2">
+        <div id="main_wrap">
+          <a id="list" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">주문 내역</a>
+          <a id="totamount" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">총 판매량</a>
+          <a id="amount" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">주간판매량</a>
+          <a id="age1" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">연령대별1</a>
+          <a id="age2" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">연령대별2</a>
+          <a id="gender" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">남여별</a>
+          <a id="type" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">포장별</a>
+        </div>
+      </div>
+
+      <div class="col s12 m10 l10">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+        <div>
+            <div class="container">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>주문번호</th>
+                    <th>날짜</th>
+                    <th>메뉴</th>
+                    <th>양</th>
+                    <th>포장유무</th>
+                    <th>총가격</th>
+                    <th>주문상태</th>
+                  </tr>
+                </thead>
+
+                <script type="text/javascript" >
+                  var obj_orderInfo_length = "<%= obj_orderInfolength%>"; // 역대 주문수 / orderInfo[n]에서의 n
+
+                  var obj_length =  "<%= obj_length%>";
+                  var obj_length_split = obj_length.split(',');
+
+                  var orderNum_list = "<%= orderNum_list%>";
+                  var orderNum_list_split = orderNum_list.split(',');
+
+                  var date_array = "<%= date%>";                           // 날짜
+                  var date_split = date_array.split(',');
+
+                  var time_array = "<%= time%>";                           // 시간
+                  var time_split = time_array.split(',');
+
+                  var menu_list_array = "<%= menu_list%>";                 // 메뉴
+                  var menu_list_split = menu_list_array.split(',');
+
+                  var amount_list_array = "<%= amount_list%>";                 // 양
+                  var amount_list_split = amount_list_array.split(',');
+
+                  var type_list_array = "<%= type_list%>";                 // 포장유무
+                  var type_list_split = type_list_array.split(',');
+
+                  var price_array = "<%= totPrice%>";                      // 총금액
+                  var price_split = price_array.split(',');
+
+                  var state_list_array = "<%= state_list_tmp%>";                 // 주문상태
+                  var state_list_split = state_list_array.split(',');
+
+                  var num_menu=0, menu_tmp=[];//총 개수
+                  var j =0;
+                  for(var i=0; i<obj_orderInfo_length; i++){//orderInfor개수....역대주문수 for 문
+                    var a= Number(obj_length_split[i]);                      // 메뉴의 개수를 a에 저장하고
+                    num_menu += a;                                           // num_menu에 계속 쌓음
+
+                    document.write("<tr>");
+                    document.write("<td>"+orderNum_list_split[i]+"</td>");
+                    document.write("<td>"+date_split[i]+" "+time_split[i]+"</td>");
+
+                    if(a==1){
+                      document.write("<td>"+menu_list_split[num_menu-1]+"</td>");   // 그냥 메뉴이름만 넣자
+                      document.write("<td>"+amount_list_split[num_menu-1]+"</td>");
+                      document.write("<td>"+type_list_split[num_menu-1]+"</td>");
+
+                    }else{
+                      for(var plus=0; plus<a; plus++){
+                        document.write("<td>"+menu_list_split[num_menu-a+plus]+"</td>");
+                        document.write("<td>"+amount_list_split[num_menu-a+plus]+"</td>");
+                        document.write("<td>"+type_list_split[num_menu-a+plus]+"</td>");
+                        if(plus!=(a-1))document.write("</tr><tr><td></td><td></td>");//표의 구성떄문에........
+                      }
+                    }
+                    document.write("<td>"+price_split[i]+"</td>");
+                    document.write("<td>"+state_list_split[i]+"</td>");
+                    document.write("</tr>");
+                  }
+                </script>
+              </table>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#home_button').on('click',function(){      //홈
+          location.href = "homepage";
+        });
+
+        $('#state_button').on('click',function(){      //state_button
+          var ID =  "<%= ID%>";
+          var placeid =  "<%= placeid%>";
+          window.location.href = 'http://52.3.187.7:3000/showOrder?ID='+ID+'&placeid='+placeid;
+        });
+
+        $('#list_button').on('click',function(){      //리스트
+          location.href = "listlist";
+        });
+
+        $('#ad_button').on('click',function(){      //광고오보겠씁돠아
+          location.href = "fcm";
+        });
+
+        $('#logout_button').on('click',function(){      //logout_button
+          location.href = "logout";
+        });
+///////////////////////////////////////////////////
+        $('#list').on('click',function(){       //list
+          location.href = "listlist";
+        });
+
+        $('#totamount').on('click',function(){  //종 판매량
+          location.href = "totamount";
+        });
+
+        $('#amount').on('click',function(){  //주간판매량
+          location.href = "amountchart";
+        });
+
+        $('#age1').on('click',function(){  //연령1
+          location.href = "agechart1";
+        });
+
+        $('#age2').on('click',function(){  //연령2
+          location.href = "agechart2";
+        });
+
+        $('#gender').on('click',function(){  //성별
+          location.href = "genderchart";
+        });
+
+        $('#type').on('click',function(){  //포장
+          location.href = "typechart";
+        });
+      });
+    </script>
+    <br>
+    <br>
+    <footer>
+      <address id="address1">
+        <br>
+        <img id="box" src="https://s3.amazonaws.com/twosome-db-url/otm_small.png" style="weight:30px; height:30px;" >Copyright © OTM Corp. All Rights Reserved.
+      </address>
+    </footer>
+  </div>
+  </body>
+</html>

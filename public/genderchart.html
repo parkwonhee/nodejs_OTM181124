@@ -1,0 +1,412 @@
+<!-- chart 화면 -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="views/reset.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- Compiled and minified CSS materializecss.com-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+    <!-- D3.js를 로딩 -->	  <!-- billboard.js와 기본 스타일을 로딩 -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="views/billboard.js"></script>
+    <link rel="stylesheet" href="views/billboard.css">
+    <link rel="stylesheet" type="text/css" href="views/full.css">
+    <style type="text/css">
+      @media all and (max-width: 596px) {
+        #minor_wrap{margin-top:1%;}
+        #main_wrap{padding-top:5%;}
+      }
+      @media all and (min-width: 597px) {
+        #minor_wrap{margin-top:25%;}
+        #main_wrap{padding-top:70%;}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+    <div id="wel">
+      안녕하세요.<script type="text/javascript">
+        var positionName = "<%= positionName%>";
+        document.write(" "+positionName+" 관리자님 ");
+      </script> <a href="https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/logout">로그아웃</a>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center">
+          <script type="text/javascript">
+            var positionName = "<%= positionName%>";
+            document.write(positionName+" 관리자 페이지");
+          </script>
+        </a>
+        <ul class="nav-mobile" class="left">
+          <li><a id="home_button" class="material-icons">home</a></li>
+          <li><a id="state_button">주문접수</a></li>
+          <li><a id="list_button">통계</a></li>
+          <li><a id="ad_button">광고</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row">
+    <div class="col s12 m2 l2">
+			<div id="main_wrap">
+        <a id="list" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">주문 내역</a>
+        <a id="totamount" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">총 판매량</a>
+        <a id="amount" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">주간판매량</a>
+				<a id="age1" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">연령대별1</a>
+        <a id="age2" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">연령대별2</a>
+				<a id="gender" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">남여별</a>
+				<a id="type" class="waves-effect waves-light btn main_button"  style="background-color: rgba(132, 191, 227, 0.7)">포장별</a>
+			</div>
+	  </div>
+
+    <div class="col s12 m5 l5">
+      <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+      <div id="minor_wrap"><br></div>
+      <div id="DonutChart"></div>
+      <script type="text/javascript">
+
+        var list_f = "<%=list_f%>";                     // 메뉴 리스트
+        var list_f_split = list_f.split(',');
+
+        var num_f = "<%=num_f%>";                     // 메뉴 주문 수
+        var num_f_split = num_f.split(',');
+
+        var list_f_num = list_f_split.length;
+
+        if(list_f_num == 1){
+          var chart = bb.generate({
+            data: {
+              columns: [
+                [list_f_split[0], 1]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+                console.log("onclick", d, i);
+              },
+              onover: function(d, i) {
+                console.log("onover", d, i);
+              },
+              onout: function(d, i) {
+                console.log("onout", d, i);
+              }
+            },
+            donut: {
+              title: "여성의 주요 판매량"
+            },
+            bindto: "#DonutChart"
+          });
+        }else if(list_f_num == 2){
+          var chart = bb.generate({
+            data: {
+              columns: [
+                [list_f_split[0], num_f_split[0]],
+                [list_f_split[1], num_f_split[1]]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+                console.log("onclick", d, i);
+              },
+              onover: function(d, i) {
+                console.log("onover", d, i);
+              },
+              onout: function(d, i) {
+                console.log("onout", d, i);
+              }
+            },
+            donut: {
+              title: "여성의 주요 판매량"
+            },
+            bindto: "#DonutChart"
+          });
+        }else if(list_f_num == 3){
+          var chart = bb.generate({
+            data: {
+              columns: [
+                [list_f_split[0], num_f_split[0]],
+                [list_f_split[1], num_f_split[1]],
+                [list_f_split[2], num_f_split[2]]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+                console.log("onclick", d, i);
+              },
+              onover: function(d, i) {
+                console.log("onover", d, i);
+              },
+              onout: function(d, i) {
+                console.log("onout", d, i);
+              }
+            },
+            donut: {
+              title: "여성의 주요 판매량"
+            },
+            bindto: "#DonutChart"
+          });
+        }else if(list_f_num == 4){
+          var chart = bb.generate({
+            data: {
+              columns: [
+                [list_f_split[0], num_f_split[0]],
+                [list_f_split[1], num_f_split[1]],
+                [list_f_split[2], num_f_split[2]],
+                [list_f_split[3], num_f_split[3]]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+                console.log("onclick", d, i);
+              },
+              onover: function(d, i) {
+                console.log("onover", d, i);
+              },
+              onout: function(d, i) {
+                console.log("onout", d, i);
+              }
+            },
+            donut: {
+              title: "여성의 주요 판매량"
+            },
+            bindto: "#DonutChart"
+          });
+        }else if(list_f_num == 5){
+          var chart = bb.generate({
+            data: {
+              columns: [
+                [list_f_split[0], num_f_split[0]],
+                [list_f_split[1], num_f_split[1]],
+                [list_f_split[2], num_f_split[2]],
+                [list_f_split[3], num_f_split[3]],
+                [list_f_split[4], num_f_split[4]]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+                console.log("onclick", d, i);
+              },
+              onover: function(d, i) {
+                console.log("onover", d, i);
+              },
+              onout: function(d, i) {
+                console.log("onout", d, i);
+              }
+            },
+            donut: {
+              title: "여성의 주요 판매량"
+            },
+            bindto: "#DonutChart"
+          });
+        }
+      </script>
+    </div>
+
+    <div class="col s12 m5 l5">
+      <div id="minor_wrap"><br></div>
+      <div id="PieChart"></div>
+      <script type="text/javascript">
+
+        var list_m = "<%= list_m%>";                     // 메뉴 리스트
+        var list_m_split = list_m.split(',');
+
+        var num_m = "<%= num_m%>";                     // 메뉴 주문 수
+        var num_m_split = num_m.split(',');
+
+        var list_m_num = list_m_split.length;
+
+        if(list_m_num == 1){
+          var chart = bb.generate({
+            data: {
+              columns: [
+            [list_m_split[0], 1]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+          	console.log("onclick", d, i);
+             },
+              onover: function(d, i) {
+          	console.log("onover", d, i);
+             },
+              onout: function(d, i) {
+          	console.log("onout", d, i);
+             }
+            },
+            donut: {
+              title: "남성의 주요 판매량"
+            },
+            bindto: "#PieChart"
+          });
+        }else if(list_m_num == 2){
+          var chart = bb.generate({
+            data: {
+              columns: [
+            [list_m_split[0], num_m_split[0]],
+            [list_m_split[1], num_m_split[1]]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+          	console.log("onclick", d, i);
+             },
+              onover: function(d, i) {
+          	console.log("onover", d, i);
+             },
+              onout: function(d, i) {
+          	console.log("onout", d, i);
+             }
+            },
+            donut: {
+              title: "남성의 주요 판매량"
+            },
+            bindto: "#PieChart"
+          });
+        }else if(list_m_num == 3){
+          var chart = bb.generate({
+            data: {
+              columns: [
+                [list_m_split[0], num_m_split[0]],
+                [list_m_split[1], num_m_split[1]],
+                [list_m_split[2], num_m_split[2]]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+          	console.log("onclick", d, i);
+             },
+              onover: function(d, i) {
+          	console.log("onover", d, i);
+             },
+              onout: function(d, i) {
+          	console.log("onout", d, i);
+             }
+            },
+            donut: {
+              title: "남성의 주요 판매량"
+            },
+            bindto: "#PieChart"
+          });
+        }else if(list_m_num == 4){
+          var chart = bb.generate({
+            data: {
+              columns: [
+                [list_m_split[0], num_m_split[0]],
+                [list_m_split[1], num_m_split[1]],
+                [list_m_split[2], num_m_split[2]],
+                [list_m_split[3], num_m_split[3]]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+          	console.log("onclick", d, i);
+             },
+              onover: function(d, i) {
+          	console.log("onover", d, i);
+             },
+              onout: function(d, i) {
+          	console.log("onout", d, i);
+             }
+            },
+            donut: {
+              title: "남성의 주요 판매량"
+            },
+            bindto: "#PieChart"
+          });
+        }else if(list_m_num == 5){
+          var chart = bb.generate({
+            data: {
+              columns: [
+                [list_m_split[0], num_m_split[0]],
+                [list_m_split[1], num_m_split[1]],
+                [list_m_split[2], num_m_split[2]],
+                [list_m_split[3], num_m_split[3]],
+                [list_m_split[4], num_m_split[4]]
+              ],
+              type: "donut",
+              onclick: function(d, i) {
+          	console.log("onclick", d, i);
+             },
+              onover: function(d, i) {
+          	console.log("onover", d, i);
+             },
+              onout: function(d, i) {
+          	console.log("onout", d, i);
+             }
+            },
+            donut: {
+              title: "남성의 주요 판매량"
+            },
+            bindto: "#PieChart"
+          });
+        }
+      </script>
+    </div>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#home_button').on('click',function(){      //홈
+          location.href = "homepage";
+        });
+
+        $('#state_button').on('click',function(){      //state_button
+          var ID =  "<%= ID%>";
+          var placeid =  "<%= placeid%>";
+          window.location.href = 'http://52.3.187.7:3000/showOrder?ID='+ID+'&placeid='+placeid;
+        });
+
+        $('#list_button').on('click',function(){      //리스트
+          location.href = "listlist";
+        });
+
+        $('#ad_button').on('click',function(){      //광고오보겠씁돠아
+          location.href = "fcm";
+        });
+
+        $('#logout_button').on('click',function(){      //logout_button
+          location.href = "logout";
+        });
+  ///////////////////////////////////////////////////
+        $('#list').on('click',function(){       //list
+          location.href = "listlist";
+        });
+
+        $('#totamount').on('click',function(){  //종 판매량
+          location.href = "totamount";
+        });
+
+        $('#amount').on('click',function(){  //주간판매량
+          location.href = "amountchart";
+        });
+
+        $('#age1').on('click',function(){  //연령1
+          location.href = "agechart1";
+        });
+
+        $('#age2').on('click',function(){  //연령2
+          location.href = "agechart2";
+        });
+
+        $('#gender').on('click',function(){  //성별
+          location.href = "genderchart";
+        });
+
+        $('#type').on('click',function(){  //포장
+          location.href = "typechart";
+        });
+      });
+    </script>
+    <br>
+    <br>
+    <footer>
+      <address id="address1">
+        <br>
+        <img id="box" src="https://s3.amazonaws.com/twosome-db-url/otm_small.png" style="weight:30px; height:30px;" >Copyright © OTM Corp. All Rights Reserved.
+      </address>
+    </footer>
+  </div>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!-- 렉스에서 uuid와 placeId 받아 결제로 연결해주는 보이지않는 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <form action="/uuidsend" method="post" style="display: none">
+      <!-- 화면에서 폼 안보이게 설정 style="display: none"-->
+      <br><input id="uuid" name="uuid" rows="4" cols="70"></input>
+      <br><input id="placeId" name="placeId" rows="4" cols="70"></input>
+    </form>
+
+  <script>
+      function getQuerystring(paramName){
+        var _tempUrl = decodeURI(window.location.search);
+          _tempUrl = _tempUrl.substring(1); //url에서 처음부터 '?'까지 삭제
+          var _tempArray = _tempUrl.split('&'); // '&'을 기준으로 분리하기
+          for(var i = 0; _tempArray.length; i++) {
+             var _keyValuePair = _tempArray[i].split('='); // '=' 을 기준으로 분리하기
+             if(_keyValuePair[0] == paramName){ // _keyValuePair[0] : 파라미터 명
+                // _keyValuePair[1] : 파라미터 값
+                return _keyValuePair[1];
+             }
+          }
+       }
+
+       document.getElementById('uuid').value = getQuerystring('uuid'); // 또는 기타 필요한 값을 할당(info.brandName, info.positionName 등등...)
+       document.getElementById('placeId').value = getQuerystring('placeId'); // 폼에 uuid랑 placeId값 넣어줌
+
+       // document.getElementById('uuid').value = '122f6c3a-574a-4e56-80ca-b4f6ea1b20e0'; // 또는 기타 필요한 값을 할당(info.brandName, info.positionName 등등...)
+       // document.getElementById('placeId').value = 'ChIJjZXMXHO5fDURJIxNAkDQsD0'; // 폼에 uuid랑 placeId값 넣어줌
+
+       var uuid = document.forms[0].elements[0].value; //폼의 엘리먼트(input)의 value값을 가져옴
+       var placeId = document.forms[0].elements[1].value;
+
+       var url_parameter = `?uuid=${uuid}&placeId=${placeId}`;
+
+       //Send('http://192.168.43.41:3000/uuidsend', uuid, placeId);
+       //window.location.href='http://192.168.43.41:3000/payment';
+
+       //Send('https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/uuidsend', uuid, placeId);
+       //window.location.href='https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/payment';
+
+       //window.location.href='http://192.168.43.41:3000/uuidsend'+url_parameter;   //#########################################url바뀌면 잘 바꿔줘야함
+       window.location.href='https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/uuidsend'+url_parameter;   //#########################################url바뀌면 잘 바꿔줘야함
+
+       // function Send(url, data, data2){
+       //     var data = {'uuid':data, 'placeId':placeId};
+       //     data = JSON.stringify(data);  //string형태로 바꿔줌
+       //     var xhr = new XMLHttpRequest();
+       //     xhr.open('POST',url);
+       //     xhr.setRequestHeader('Content-Type',"application/json");
+       //     xhr.send(data);
+       //   }
+
+   </script>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+<!-- 어플에서 결제내역보기 버튼 클릭하면 연결되는 리스트 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  </head>
+
+  <style>
+    h5{ text-align:center;}
+  </style>
+
+  <body>
+      <form action="/uuidsend" method="post" style="display: none">
+    <!-- 화면에서 폼 안보이게 설정 style="display: none"-->
+    <br><input id="uuid" name="uuid" rows="4" cols="70"></input>
+    <br><input id="state_list" name="state" rows="4" cols="70"></input>
+
+  </form>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+      <div><br><h5>
+          <div class="container">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>주문</th>
+                  <th>날짜</th>
+                  <th></th>
+                  <th>가격</th>
+                </tr>
+              </thead>
+
+              <script type="text/javascript" >
+                var uuid = "<%= uuid%>";
+                document.getElementById('uuid').value = uuid; // 또는 기타 필요한 값을 할당(info.brandName, info.positionName 등등...)
+                var uuid_form = document.forms[0].elements[0].value;
+                //document.write(uuid_form);
+
+                var state_list_array = "<%= state_list%>";                 // 메뉴
+                var state_list_split = state_list_array.split(',');
+                document.getElementById('state_list').value = state_list_array;
+
+                var obj_orderInfo_length = "<%= obj_orderInfo_length%>"; // 역대 주문수 / orderInfo[n]에서의 n
+
+                var obj_length = "<%= obj_length%>";                     // 주문수별 주문한 메뉴개수 / orderInfo[n].order[m]에서의 m
+                var obj_length_split = obj_length.split(',');
+
+                var menu_list_array = "<%= menu_list%>";                 // 메뉴
+                var menu_list_split = menu_list_array.split(',');
+
+                var paymentNum_array = "<%= paymentNum%>";               // 결제번호
+                var paymentNum_split = paymentNum_array.split(',');
+
+                var date_array = "<%= date%>";                           // 날짜+시간
+                var date_split = date_array.split(',');
+
+                var price_array = "<%= totPrice%>";                      // 총금액
+                var price_split = price_array.split(',');
+
+                var brandName_array = "<%= brandName%>";                 // 브랜드명
+                var brandName_split = brandName_array.split(',');
+
+                var positionName_array = "<%= positionName%>";           // 지점명
+                var positionName_split = positionName_array.split(',');
+
+                var menu_list_array = "<%= menu_list%>";           // 메뉴리스트
+                var menu_list_split = menu_list_array.split(',');
+                //document.write(menu_list_split);
+
+                var num_menu=0, menu_tmp=[];
+                for (var i=0; i<obj_orderInfo_length; i++){
+                  var a= Number(obj_length_split[i]);
+                  num_menu += a;
+                }
+
+                for(var i=0; i<num_menu; i++){
+                  menu_tmp.push(menu_list_split[i]);
+                }
+
+                var test_tmp=[];
+                num_menu=0;
+                for(var i=0; i<obj_orderInfo_length; i++){
+                  var a= Number(obj_length_split[i]);                      // 메뉴의 개수를 a에 저장하고
+                  num_menu += a;                                           // num_menu에 계속 쌓음
+                  //document.write(a+" ");                                 // 1 1 1 1 1 1 2 1 2 (메뉴의 개수)
+                  //document.write(num_menu+" ");                          // 1 2 3 4 5 6 8 9 11 (11개의 메뉴가 있음을 알 수 있음)
+
+                  document.write("<tr>");
+                  document.write("<td>"+paymentNum_split[i].substring(33,37)+"</td>");
+                  document.write("<td>"+date_split[i]+"</td>");
+                  document.write("<td> <input value='상세보기' type='button' id='"+i+"'></ td>"); //버튼 id 이용
+                  document.write("<td>"+price_split[i]+"</td>");
+                  document.write("</tr>");
+
+                  //`window.location.href = 'https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/payment_list';
+
+                  var reply_click = function(){
+                      window.location.href = 'https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/payment_list_complete'+'?paymentNum_split='+paymentNum_split[this.id].substring(33,37)+
+                      '&price_split='+price_split[this.id]+'&brandName_split='+brandName_split[this.id]+'&positionName_split='+positionName_split[this.id]
+                      +'&numberof_menu='+obj_length_split[this.id]+'&menu_list_split='+menu_list_split[this.id]+'&uuid_split='+uuid_form+'&state_split='+state_list_split[this.id];   //#############################
+                  }
+                  document.getElementById(i).onclick = reply_click; //i번째 버튼클릭시 reply_click()
+                }
+              </script>
+            </table>
+          </div>
+        </h5>
+  </body>
+</html>

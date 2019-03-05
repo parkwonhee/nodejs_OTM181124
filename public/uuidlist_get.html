@@ -1,0 +1,20 @@
+<!-- 렉스에서 uuid와 placeId 받아 결제로 연결해주는 보이지않는 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <form action="/uuidsend" method="post" style="display: none">
+      <!-- 화면에서 폼 안보이게 설정 style="display: none"-->
+      <br><input id="uuid" name="uuid" rows="4" cols="70"></input>
+      <br><input id="placeId" name="placeId" rows="4" cols="70"></input>
+    </form>
+
+  <script>
+       window.location.href='https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/payment_list';
+   </script>
+  </body>
+</html>

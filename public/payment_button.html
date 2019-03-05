@@ -1,0 +1,76 @@
+<!-- 결제 페이지 -->
+
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  </head>
+
+  <style>
+    h1, h3, h4, h5, h6{
+      text-align:center;
+    }
+  </style>
+
+  <body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
+    <br><br><br><br>
+    <h1><br><span style="color:green">결제진행</span><br>페이지입니다.</h1>
+    <hr>
+    <h4>
+        결제번호 :
+        <script>
+         var uid = '<%= merchant_uid%>';
+         uid = uid.substring(33,37);
+         document.write(uid);
+        </script>
+        <br>
+        총금액 : <%= totPrice%>원<br><br>
+    </h4>
+    <h5>
+        결제하시겠습니까?<br><hr>
+        <input type="button" value="결제" id="check_module" class="btn" style="background-color:green;color:white;">
+    </h5>
+    <script>
+      document.querySelector('#check_module').addEventListener('click', function(){
+        var merchant_uid = '<%= merchant_uid%>'; //''없으면 결제안됨
+        var name = "오투미";
+        var totPrice = <%= totPrice%>;
+
+        var IMP = window.IMP;
+        IMP.init('imp89012695'); //가맹점 식별코드
+        IMP.request_pay({
+            pg : 'html5_inicis',
+            pay_method : 'card',
+            merchant_uid : merchant_uid,
+            name : name,
+            amount : totPrice,
+            buyer_email : '',
+            buyer_name : '',
+            buyer_tel : '',
+            buyer_addr : '',
+            buyer_postcode : '',
+            m_redirect_url : 'https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/payment_complete', //##############################url바뀌면 잘 바꿔줘야함 `
+            app_scheme : 'iamportapp'
+        }, function(rsp) {
+            if ( rsp.success ) {
+                var msg = '결제가 완료되었습니다.';
+                msg += '고유ID : ' + rsp.imp_uid;
+                msg += '상점 거래ID : ' + rsp.merchant_uid;
+                msg += '결제 금액 : ' + rsp.paid_amount;
+                msg += '카드 승인번호 : ' + rsp.apply_num;
+            } else {
+                var msg = '결제에 실패하였습니다.';
+                msg += '에러내용 : ' + rsp.error_msg;
+            }
+            //alert(msg);
+        });
+      });
+    </script>
+  </body>
+</html>

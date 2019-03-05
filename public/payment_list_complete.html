@@ -1,0 +1,117 @@
+<!-- payment_list에서 상세보기 버튼 클릭하면 연결되는 결제완료 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  </head>
+
+  <style>
+    h1, h5, h6{
+      text-align:center;
+    }
+  </style>
+
+  <body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+      <div>
+        <br>
+        <h1>주문이 정상적으로<br><span style="color:green">완료</span>되었습니다.</h1>
+        <hr>
+          <h5>
+            주문번호 :
+            <script>
+            function getQuerystring(paramName){
+                var _tempUrl = decodeURI(window.location.search);
+                  _tempUrl = _tempUrl.substring(1); //url에서 처음부터 '?'까지 삭제
+                  var _tempArray = _tempUrl.split('&'); // '&'을 기준으로 분리하기
+                  for(var i = 0; _tempArray.length; i++) {
+                     var _keyValuePair = _tempArray[i].split('='); // '=' 을 기준으로 분리하기
+                     if(_keyValuePair[0] == paramName){ // _keyValuePair[0] : 파라미터 명
+                        // _keyValuePair[1] : 파라미터 값
+                        return _keyValuePair[1];
+                     }
+                  }
+               }
+
+              var paymentNum_split=getQuerystring('paymentNum_split');
+              document.write(paymentNum_split);
+
+              var menu_tmp=getQuerystring('menu_tmp');
+              document.write(menu_tmp);
+
+              function relocate_home(){
+                   var uuid_query=getQuerystring('uuid_split');
+                   location.href = "https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/post_list?uuid="+uuid_query; //#####################
+              }
+
+
+            </script>
+            <button type="button" class="btn btn-sm" onclick=" relocate_home()">구매내역보기</button> <br><br><br>
+
+            <input type="button" value="주문접수중" id="a" class="btn" onclick="change(this)" style="background-color:whitegray;">
+            <input type="button" value="제조중" id="b" class="btn" onclick="change(this)" style="background-color:whitegray;">
+            <input type="button" value="제조완료" id="c" class="btn" onclick="change(this)" style="background-color:whitegray;">
+            <input type="button" value="수령완료" id="d" class="btn" onclick="change(this)" style="background-color:whitegray;"><br>
+
+            <script language="JavaScript">
+              var state=getQuerystring('state_split');
+
+              if(state=="1"){
+                document.getElementById("a").click(); //클릭
+              }else if(state=="2"){
+                document.getElementById("b").click();
+              }else if(state=="3"){
+                document.getElementById("c").click();
+              }else{
+                document.getElementById("d").click();
+              }
+
+              function change(obj){
+                obj.style.background = 'green';  //클릭시 녹색배경+흰색글씨
+                obj.style.color = 'white';
+              }
+            </script>
+
+            <h6>
+              <script>
+                var brandName_split=getQuerystring('brandName_split');
+                document.write(brandName_split+" ");
+                var positionName_split=getQuerystring('positionName_split');
+                document.write(positionName_split);
+              </script>
+            <br>
+              예상소요시간 : 10분</h6><hr>
+
+          <div class="container">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>메뉴</th>
+                  <th>가격</th>
+                </tr>
+              </thead>
+
+              <script type="text/javascript" >
+                document.write("<tr>");
+                var numberof_menu=getQuerystring('numberof_menu');
+                var price_split=getQuerystring('price_split');
+                var menu_list_split=getQuerystring('menu_list_split');
+                if(numberof_menu==1){
+                  document.write("<td>"+menu_list_split+"</td>");
+                }else {
+                  document.write("<td>"+menu_list_split+" 외 "+(numberof_menu-1)+" 건"+"</td>"); //맘에 안들어
+                }
+                document.write("<td>"+price_split+"</td>");  // 맨 마지막 행에 총금액 표시
+                document.write("</tr>");
+              </script>
+            </table>
+          </div>
+        </h5>
+        <h5><a href="app://application"><button type="button" class="btn" onclick="app://application" style="background-color:green;color:white;">홈화면으로 돌아가기</button></a><br><br><br></h5>
+        <!--클릭시 홈 액티비티로 연결-->
+  </body>
+</html>

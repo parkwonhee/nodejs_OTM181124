@@ -1,0 +1,126 @@
+<!--로그인 후 메인페이지-->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="views/reset.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- Compiled and minified CSS materializecss.com-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+    <!-- D3.js를 로딩 -->	  <!-- billboard.js와 기본 스타일을 로딩 -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="views/billboard.js"></script>
+    <link rel="stylesheet" href="views/billboard.css">
+    <link rel="stylesheet" type="text/css" href="views/full.css">
+    <style type="text/css">
+      h6{text-align:center;margin:0;background-color:#f9f9f9;border-width:1px 10;font-family:굴림;}
+      @media all and (max-width: 589px) {
+        .row{margin:10%;}
+      }
+      @media all and (min-width: 590px) and (max-width: 800px) {
+        .row{margin:14%;}
+      }
+      @media all and (min-width: 801px) and (max-width: 1211px) {
+        .row{margin:17%;}
+      }
+      @media all and (min-width: 1212px) {
+        .row{margin:17%;}
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wel">
+      안녕하세요.<script type="text/javascript">
+        var positionName = "<%= positionName%>";
+        document.write(" "+positionName+" 관리자님 ");
+      </script> <a href="https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/logout">로그아웃</a>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center">
+          <script type="text/javascript">
+            var positionName = "<%= positionName%>";
+            document.write(positionName+" 관리자 페이지");
+          </script>
+        </a>
+        <ul class="nav-mobile" class="left">
+          <li><a id="home_button" class="material-icons">home</a></li>
+          <li><a id="state_button">주문접수</a></li>
+          <li><a id="list_button">통계</a></li>
+          <li><a id="ad_button">광고</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="row">
+      <div class="col s12 m4 l4">
+        <a id="state_button2">
+          <img src="https://s3.amazonaws.com/twosome-db-url/order.png" style="margin-left: auto; margin-right: auto; display: block; width:50%; height:50%;">
+          <h6>주문접수</h6>
+        </a>
+      </div>
+      <div class="col s12 m4 l4">
+        <a href="https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/listlist">
+          <img src="https://s3.amazonaws.com/twosome-db-url/gochart.png" style="margin-left: auto; margin-right: auto; display: block; width:50%; height:50%;">
+          <h6>통계</h6>
+        </a>
+      </div>
+      <div class="col s12 m4 l4">
+        <a href="https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/fcm">
+          <img src="https://s3.amazonaws.com/twosome-db-url/alarm.png" style="margin-left: auto; margin-right: auto; display: block; width:40%; height:40%; padding-bottom: 5%;padding-top:5%;">
+          <h6>광고</h6>
+        </a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#home_button').on('click',function(){      //홈
+          location.href = "homepage";
+        });
+
+        $('#state_button').on('click',function(){      //state_button
+          var ID =  "<%= ID%>";
+          var placeid =  "<%= placeid%>";
+          window.location.href = 'http://52.3.187.7:3000/showOrder?ID='+ID+'&placeid='+placeid;
+        });
+
+        $('#state_button2').on('click',function(){      //state_button
+          var ID =  "<%= ID%>";
+          var placeid =  "<%= placeid%>";
+          window.location.href = 'http://52.3.187.7:3000/showOrder?ID='+ID+'&placeid='+placeid;
+        });
+
+        $('#list_button').on('click',function(){      //리스트
+          location.href = "listlist";
+        });
+
+        $('#ad_button').on('click',function(){      //광고오보겠씁돠아
+          location.href = "fcm";
+        });
+
+        $('#logout_button').on('click',function(){      //logout_button
+          location.href = "logout";
+        });
+      });
+    </script>
+    <br>
+    <br>
+    <footer>
+      <address id="address1">
+        <br>
+        <img id="box" src="https://s3.amazonaws.com/twosome-db-url/otm_small.png" style="weight:30px; height:30px;" >Copyright © OTM Corp. All Rights Reserved.
+      </address>
+    </footer>
+  </body>
+</html>

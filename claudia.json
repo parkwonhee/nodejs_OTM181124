@@ -1,0 +1,10 @@
+{
+  "lambda": {
+    "role": "otm-executor",
+    "name": "otm",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "ccx2cfg379"
+  }
+}

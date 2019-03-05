@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="views/reset.css">
+	  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- Compiled and minified CSS materializecss.com-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="views/full.css">
+    <style type="text/css">
+      @media all and (max-width: 629px) {
+        .container{margin:5%;width:90%;margin-top:5%;margin-bottom: 5%;}
+        #box { border-radius: 20px;margin-left: auto; margin-right: auto; display: block; width:80%; height:55%;}
+        .form-signin{padding-top:8%;}
+      }
+      @media all and (min-width: 630px) and (max-width: 1099px) {
+        .container{margin:25%;width:450px;margin-top:7%;margin-bottom: 5%;}
+        #box { border-radius: 20px; margin-left: auto; margin-right: auto; display: block; width:80%; height:50%;}
+        .form-signin{padding-top:10%;}
+      }
+      @media all and (min-width: 1100px) {
+        .container{margin:35%;width:450px;margin-top:5%;margin-bottom: 5%;}
+        #box { border-radius: 20px; margin-left: auto; margin-right: auto; display: block; width:300px; height:300px;}
+        .form-signin{padding-top:8%;}
+      }
+    </style>
+
+  </head>
+
+  <body>
+    <div class="wrap">
+    <div id="wel">
+      <br>
+    </div>
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center">
+            OTM 관리자 페이지
+        </a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <img id="box" src="https://s3.amazonaws.com/twosome-db-url/otm_log2.png">
+
+      <form class="form-signin" action="/latest/login" method="post"style="height:30%;">
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" name = "email"id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" name = "password" id="inputPassword" class="form-control" placeholder="Password" required>
+          <label>
+            <input type="checkbox" value="remember-me"/>
+            <span>Remember</span>
+          </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" style="background-color:rgba(132, 191, 227, 0.7);">Sign in</button>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> 혹시 잊어버리셨나요?
+          </label>
+        </div>
+      </form>
+    </div>
+    <footer>
+      <address id="address1">
+        <br>
+        <img id="notbox" src="https://s3.amazonaws.com/twosome-db-url/otm_small.png" style="weight:30px; height:30px;" >Copyright © OTM Corp. All Rights Reserved.
+      </address>
+    </footer>
+  </div>
+  </body>
+</html>

@@ -1,0 +1,62 @@
+<!-- fcm 푸시 페이지 -->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  <body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+
+<!-- -->
+    <br>
+      <form action="/fcm_send_alert" method="post">
+        <input id="token" name="token" rows="4" cols="70"></input><br>
+        <input id="title" name="title" rows="4" cols="70"></input><br>
+        <input id="body" name="title" rows="4" cols="70"></input><br>
+      </h2>
+      </form>
+
+    <script>
+      var token="<%= token%>";
+      document.getElementById('token').value = token;
+
+      var brandName="<%= brandName%>";
+      var positionName="<%= positionName%>";
+      var name = brandName+" "+positionName;
+      document.getElementById('title').value = name;
+
+      var state="<%= state%>";  //상태값 끌어와서 상태별 버튼색상 바꿔줌
+      var state_int = parseInt(state);
+      document.write(state_int);
+
+      //document.getElementById('body').value = "11111";
+
+      if(state_int=="1"){
+        document.getElementById('body').value = "주문접수중";
+      }else if(state_int=="2"){
+        document.getElementById('body').value = "주문이 접수되어 제조중입니다:)";
+      }else if(state_int=="3"){
+        document.getElementById('body').value = "제조가 완료되었습니다. 수령해주세요:)";
+      }else if (state_int=="4"){
+        document.getElementById('body').value = "수령이 완료되었습니다. 맛있게드세요:)";
+      }
+
+      var token_inputdata = document.forms[0].elements[0].value; //폼의 첫번째 엘리먼트(input)의 value값을 가져옴 == token
+      var title_inputdata = document.forms[0].elements[1].value; //폼의 두번째 엘리먼트(input)의 value값을 가져옴 == title
+      var body_inputdata = document.forms[0].elements[2].value; //폼의 두번째 엘리먼트(input)의 value값을 가져옴 == title
+
+      Send('https://ccx2cfg379.execute-api.us-east-1.amazonaws.com/latest/fcm_send_alert', title_inputdata, token_inputdata, body_inputdata);  //#########################################url바뀌면 잘 바꿔줘야함
+
+      function Send(url, data, data2, data3){
+          var data = {'title':data, 'token':data2, 'body':data3};
+          data = JSON.stringify(data);  //string형태로 바꿔줌
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST',url);
+          xhr.setRequestHeader('Content-Type',"application/json");
+          xhr.send(data);
+      }
+
+    </script>
+  </body>
+</html>
