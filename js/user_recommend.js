@@ -1,4 +1,5 @@
 // dynamodb DB 쿼리
+//main
 
 module.exports.send = function (j){
   var AWS = require('aws-sdk');
