@@ -210,7 +210,7 @@ module.exports.send = function (j){
 
 //var maxlist_f10 = [],maxlist_f20 = [],maxlist_f30 = [],maxlist_f40 = [],maxlist_m10 = [],maxlist_m20 = [],maxlist_m30 = [],maxlist_m40 = [];
 //위에넣음
-//////////////////////////////////////10대 여자/////////////////////////////////////////////////////////
+//////////////////////////////////////10대 여자/////////////////////////////////////////////////////////////////////////////////
             if(parseInt(menu_f10.length)!=0){
               for (var i = 0; i < menu_f10.length; i = i + count) {
                 count = 1;
@@ -246,7 +246,7 @@ module.exports.send = function (j){
               maxurl_f10='https://s3.amazonaws.com/twosome-db-url/181_big_img.jpg';
             }
             console.log(maxlistk_f10 + " maxlistk_f10 최대 메뉴= " + count );    //coffeewhippedcreamcakepieces = 1
-///////////////////////////////20대 여자////////////////////////////////////////////////////////////////
+///////////////////////////////20대 여자///////////////////////////////////////////////////////////////////////////////////////
             if(parseInt(menu_f20.length)!=0){
               for (var i = 0; i < menu_f20.length; i = i + count) {
                 count = 1;
